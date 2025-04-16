@@ -1,0 +1,137 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+    .col-md-3 {
+        display: inline-block;
+        margin-left: -4px;
+    }
+
+    .col-md-3 img {
+        width: 210px;
+        height: 250px;
+    }
+
+    body .no-padding {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Smooth fade animation for carousel */
+    .carousel-fade .carousel-item {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+
+    .carousel-fade .carousel-item.active {
+        opacity: 1;
+    }
+
+    /* Card hover effect */
+    .card {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    /* Button hover effect */
+    .btn-primary {
+        transition: background-color 0.3s ease-in-out, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+    }
+
+    {% comment %} /* Custom carousel controls */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: blue;  /* Set the background color to blue */
+    background-size: 50%;  /* Scale the icon inside the small box */
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 10px;  /* Adjust width of the box */
+    height: 10px;  /* Adjust height of the box */
+    border-radius: 5px;  /* Optional: Add rounded corners */
+    transition: transform 0.2s ease-in-out;  /* Smooth transition for hover */
+}
+
+/* Hover effect: Slightly reduce size */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: blue;
+    transform: scale(0.05);  /* Reduce size on hover */
+} {% endcomment %}
+    
+    .carousel-indicators {
+        bottom: 0;
+    }
+
+    .carousel-indicators .active {
+        background-color: blue;
+    }
+
+    
+{% endblock %}
+
+{% block body %}
+{% load static %}
+
+<div class="container">
+    {% for product, range, nSlides in allProds %}
+    <h5 class="my-4">{{ product.0.category }}</h5>
+    <!-- Unique Carousel for each category -->
+    <div id="demo{{ forloop.counter }}" class="carousel slide my-3 carousel-fade" data-ride="carousel">
+
+        <!-- Indicators -->
+        <ul class="carousel-indicators">
+            <li data-target="#demo{{ forloop.counter }}" data-slide-to="0" class="active"></li>
+            {% for i in range %}
+                <li data-target="#demo{{ forloop.parentloop.counter }}" data-slide-to="{{ i }}"></li>
+            {% endfor %}
+        </ul>
+
+        <!-- Carousel Items -->
+        <div class="carousel-inner no-padding">
+            {% for i in product %}
+                {% if forloop.counter0|divisibleby:4 %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row">
+                {% endif %}
+
+                <div class="col-xs-3 col-sm-3 col-md-3">
+                    <div class="card" style="width: 18rem;">
+                        <img src="/media/{{ i.image }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ i.product_name }}</h5>
+                            <p class="card-text">{{ i.desc }}</p>
+                            <a href="#" class="btn btn-primary">Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% if forloop.counter|divisibleby:4 or forloop.last %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!--  Unique Previous & Next Controls for Each Carousel -->
+        <a class="carousel-control-prev" href="#demo{{ forloop.counter }}" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: blue; width: 30px; height: 30px; border-radius: 5px;></span>
+            <span class="sr-only"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo{{ forloop.counter }}" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: blue; width: 30px; height: 30px; border-radius: 5px;></span>
+            <span class="sr-only"></span>
+        </a>
+    </div>
+{% endfor %}
+
+</div>
+
+
+{% endblock %}
